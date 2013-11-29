@@ -9,6 +9,8 @@
 #define din 30 // dinomenator for ganaration random nombers
 
 
+// Some information about programm you can find in file discripsion(tread_1.c - name of file)
+
 // getting  buffer size
 
 int gbs(){
