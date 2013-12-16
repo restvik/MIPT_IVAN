@@ -23,6 +23,7 @@ char* form_path(char* path, char* entry)
                 printf("In function form_path: malloc() failed:\nerror with malloc path for %s in %s", entry, path);
                 return NULL;
         }
+        // AP: эту функцию не исопльзовать - заменить стандартной (printf, write, read)
         if (sprintf(new_path, "%s/%s", path, entry) != new_path_size - 1)
         {
                 printf("In function form_path: error with making path for %s in %s\n", entry, path);
@@ -69,6 +70,7 @@ void dir_walk(char* src_path,char* dst_path)
 // Function for work with regular files
 void handle_file(char* src_path, char* dst_path, char* entry)
 {
+        // AP: а что это вы все файлы подряд копируете? а проверка на модификацию?
         char* src_file = form_path(src_path, entry);
         if  (src_file == NULL)
         {
@@ -133,6 +135,7 @@ void copy_file(const char* src_file,const char* dst_file)
         }
         char buf[4096];
         ssize_t read_bytes;
+        // AP: а где проверки на возможность записи меньшего количества байт?
         while ((read_bytes = read(ifd, buf, sizeof(buf))) > 0)
         {
                 if (write(ofd, buf, read_bytes) != read_bytes)
