@@ -8,6 +8,9 @@
 #include <string.h>
 #include <errno.h>
 
+time_t start_time;//time when we start use our programm
+
+
 void copy_file(const char* src_file,const char* dst_file);
 void handle_dir(char* src_path, char* dst_path, char* entry);
 void handle_file(char* src_path, char* dst_path, char* entry);
@@ -23,13 +26,9 @@ char* form_path(char* path, char* entry)
                 printf("In function form_path: malloc() failed:\nerror with malloc path for %s in %s", entry, path);
                 return NULL;
         }
-        // AP: эту функцию не исопльзовать - заменить стандартной (printf, write, read)
-        if (sprintf(new_path, "%s/%s", path, entry) != new_path_size - 1)
-        {
-                printf("In function form_path: error with making path for %s in %s\n", entry, path);
-                perror("sprintf() failed:");
-                return NULL;
-        }
+        strcat(strcpy(new_path, path), "/");
+        strcat(new_path, entry);
+
         return new_path;
 }
 
@@ -38,7 +37,7 @@ void dir_walk(char* src_path,char* dst_path)
         // check of correct input information
         // strstr(const char *path_1,const char *path_2) -  finds the first occurrence path_2 in path_1
         if (strstr(dst_path, src_path)!=NULL)
-        {
+                {
                 printf("In function dir_walk: gone in cycles. Please verify the input <src> and <dst>.");
                 exit(-1);
         }
@@ -71,18 +70,10 @@ void dir_walk(char* src_path,char* dst_path)
 void handle_file(char* src_path, char* dst_path, char* entry)
 {
         // AP: а что это вы все файлы подряд копируете? а проверка на модификацию?
+        // Проверка на модификацию я поставил в копирование файла, т.к в любом случае нам придется в функции copy_file воспользоваться системным вызовом fstst()
         char* src_file = form_path(src_path, entry);
-        if  (src_file == NULL)
-        {
-                printf("form_path(src) failed\n");
-                exit(-1);
-        }
         char* dst_file = form_path(dst_path, entry);
-        if (dst_file == NULL)
-        {
-                printf("form_path(dst) failed\n");
-                exit(-1);
-        }
+
         copy_file(src_file,dst_file);
 
         free(src_file);
@@ -93,17 +84,8 @@ void handle_dir(char* src_path, char* dst_path, char* entry)
 {
         int errno;
         char* src_dir = form_path(src_path, entry);
-        if  (src_dir == NULL)
-        {
-                printf("In function handle_dir: form_path(src) failed\n");
-                exit(-1);
-        }
         char* dst_dir = form_path(dst_path, entry);
-        if (dst_dir == NULL)
-        {
-                printf("In function handle_dir: form_path(dst) failed\n");
-                exit(-1);
-        }
+
         if ((mkdir(dst_dir, 0777) == -1) && (errno != EEXIST))
         {
                 printf("In function handle_dir: can't create a directory %s\n", dst_dir);
@@ -127,6 +109,12 @@ void copy_file(const char* src_file,const char* dst_file)
                 printf("In function copy_file: can't stat %s\n", src_file);
                 exit(-1);
         }
+        // Check the timr of last file modificatiom
+        if (start_time < (stat.st_mtime) ){
+                printf("file was modificat backup can't work more!\n");
+                exit(-1);
+        }
+
         int ofd = open(dst_file, O_CREAT | O_WRONLY | O_TRUNC, stat.st_mode);
         if (ofd == -1)
         {
@@ -135,11 +123,15 @@ void copy_file(const char* src_file,const char* dst_file)
         }
         char buf[4096];
         ssize_t read_bytes;
+        int flag=1;
         // AP: а где проверки на возможность записи меньшего количества байт?
-        while ((read_bytes = read(ifd, buf, sizeof(buf))) > 0)
-        {
-                if (write(ofd, buf, read_bytes) != read_bytes)
-                {
+        while(flag){
+                if((read_bytes = read(ifd, buf, sizeof(buf))) < 0)
+                        printf("In function copy_file: can't read %s\n", src_file);
+                else
+                        if(read_bytes != sizeof(buf))
+                                flag = 0;
+                if(write(ofd, buf, read_bytes) != read_bytes){
                         printf("In function copy_file: can't write %s\n", dst_file);
                         exit(-1);
                 }
@@ -172,6 +164,8 @@ void  gz(const  char *s){
 }
 int main(int argc, char *argv[])
 {
+        // I don't need on memory where I will store time so I wrote NULL in time()
+        start_time=time(NULL);
         // Check the correct data input
         if (argc != 3)
         {
