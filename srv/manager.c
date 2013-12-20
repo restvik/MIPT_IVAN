@@ -17,7 +17,7 @@ int main(int argc, char** argv){
                 exit(-1);
         }
 
-        // Stsrt n clients
+        // Start n clients
         n_cln = atoi(argv[2]);
         if( n_cln != 0){
                 for(i=1; i <= n_cln; i++){
