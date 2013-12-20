@@ -60,7 +60,7 @@ void make_queue(){
                 if(mybuf.mat_part[0] == STOPWORK)
                         flag = 0;
                 else{
-                        //last massage in queue dekite all ipc
+                        //last massage in queue delite all ipc
                         if(mybuf.mat_part[0] == BY){
                                 if ((msgrcv(msqid, &mybuf,(MAXLEN+1)*sizeof(int),3*cln_num, 0)) < 0){
                                           printf("can't receive message in LAST CLIENT!\n");
