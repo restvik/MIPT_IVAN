@@ -206,25 +206,25 @@ void get_info(struct file_data_struct **file_data, struct stat *buf, char *file_
 
 char* get_perm(mode_t st_mode)
 {
-        char* pperm;
-        pperm = (char*)malloc(PERM_SIZE * sizeof(char));
+        char* perm;
+        perm = (char*)malloc(PERM_SIZE * sizeof(char));
         mode_t owner, group, other;
         int i = 0;
         owner = st_mode & S_IRWXU;
         group = st_mode & S_IRWXG;
         other = st_mode & S_IRWXO;
-        pperm = (char*) malloc (PERM_SIZE * sizeof(char));
-        for (i=0;i < PERM_SIZE; i++) pperm[i] = '-';
-                pperm [PERM_SIZE - 1] = '\0';
-        if ((owner & S_IRUSR)>0) pperm [0] = 'r';
-        if ((owner & S_IWUSR)>0) pperm[1] = 'w';
-        if ((owner & S_IXUSR)>0) pperm[2] = 'x';
-        if (group & S_IRGRP) pperm[3] = 'r';
-        if (group & S_IWGRP) pperm[4] = 'w';
-        if (group & S_IXGRP) pperm[5] = 'x';
-        if (other & S_IROTH) pperm[6] = 'r';
-        if (other & S_IWOTH) pperm[7] = 'w';
-        if (other & S_IXOTH) pperm[8] = 'x';
+        perm = (char*) malloc (PERM_SIZE * sizeof(char));
+        for (i=0;i < PERM_SIZE; i++) perm[i] = '-';
+                perm [PERM_SIZE - 1] = '\0';
+        if ((owner & S_IRUSR)>0) perm [0] = 'r';
+        if ((owner & S_IWUSR)>0) perm[1] = 'w';
+        if ((owner & S_IXUSR)>0) perm[2] = 'x';
+        if (group & S_IRGRP) perm[3] = 'r';
+        if (group & S_IWGRP) perm[4] = 'w';
+        if (group & S_IXGRP) perm[5] = 'x';
+        if (other & S_IROTH) perm[6] = 'r';
+        if (other & S_IWOTH) perm[7] = 'w';
+        if (other & S_IXOTH) perm[8] = 'x';
 
-        return pperm;
+        return perm;
 }
