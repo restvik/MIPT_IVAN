@@ -16,6 +16,7 @@
 #include <errno.h>
 #include <wait.h>
 
+#define KEYFILE "manager.c"
 #define FILENAME "out.txt"
 #define DATE_SIZE 26
 #define PERM_SIZE 10
@@ -42,6 +43,9 @@ int main(int argc, char **argv){
         size_t f_size=0;//f_size need for map
         struct dirent **read_dir;
         DIR *dir;
+        int msg_id;
+        key_t msg_key;
+
 
         struct file_data_struct **file_data;
         struct stat *buf;
@@ -95,9 +99,29 @@ int main(int argc, char **argv){
                 my_error ("Error in munap!\n");
         free(path);
         free(buf);
+        
+        struct mymsgbuf {
+                long mtype;
+                size_t file_len;
+        } my_msg;
 
-        int nid;
-        nid=fork();
+        my_msg.mtype = 1;
+        my_msg.file_len = f_size;
+
+        msg_key = ftok (KEYFILE , 1);
+        if (msg_key < 0)
+                my_error ("ERROR in ftok!\n");
+
+        msg_id = msgget (msg_key, IPC_CREAT | 0666);
+        if (msg_id < 0)
+                my_error ("ERROR in msgget!\n");
+
+        if (msgsnd (msg_id, &my_msg , sizeof (size_t) , 0) < 0) {
+                msgctl (msg_id , IPC_RMID , NULL );
+                my_error ("Can not send a message!\n");
+        }
+
+        
         return 0;
 }
 void* open_file(int f_size){
