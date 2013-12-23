@@ -29,6 +29,8 @@ struct file_data_struct {
         off_t file_size;//size of file
         char nug[];//name user group
 };
+// AP: избавьтесь от глобальных переменных
+
 size_t f_size=0;//f_size need for map
 struct dirent **read_dir;
 DIR *dir;
@@ -57,6 +59,7 @@ int main(int argc, char **argv){
         if ((dir = opendir(argv[1])) == NULL)
                  my_error ("Can't open dir!\n");
         //Get a number of files
+        // AP: организуйте работу так, тчобы директория читалась только один раз (в один проход)
         f_num = take_num();
         file_data = (struct file_data_struct **) malloc (f_num * sizeof (struct file_data_struct*));
         //Get information
