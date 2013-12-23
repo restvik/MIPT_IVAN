@@ -44,6 +44,7 @@ int main(){
 
         if ((fd = open(FILENAME, O_RDWR | O_CREAT , 0666)) < 0)
                  my_error("can not open result file\n");
+        //AP: организуйте работу так чтобы mmap делать только один раз
         if ((for_map = mmap(NULL, sizeof(size_t)+sizeof(int), PROT_WRITE | PROT_READ, MAP_SHARED, fd, 0)) == MAP_FAILED)
                  my_error("ERROR in map\n");
         h_for_map = for_map;
