@@ -36,6 +36,7 @@ void my_error(char *mas);
 void my_handler();
 void* open_file();
 int main(){
+        // AP: костыль - у вас тут процесс все время выплняется - сделайте так чтобы он тут переходил в ожидание
         //blocked programm 2
         while(start_id) (void)signal(SIGUSR1,my_handler);
         //Take a size of file and nomber of files
