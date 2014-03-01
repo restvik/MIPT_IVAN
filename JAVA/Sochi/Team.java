@@ -1,6 +1,7 @@
 	
 public class Team{
 	private String teamName;
+	private int groupNumber;
 	private int tournamentRating=1;
 	private int groupPlace=4;
 	private int points=0;
@@ -9,6 +10,9 @@ public class Team{
 	private int ratingIIHF;
 	
 	//Get
+	public int  getGroupNumber () {
+	      return groupNumber;
+	}
 	public String getTeamName () {
 	      return teamName;
 	}
@@ -31,6 +35,9 @@ public class Team{
 	      return ratingIIHF;
 	}
 	//Set
+	public void setGroupNumber (int number) {
+	      groupNumber = number;
+	}
 	public void setTeamName (String interTeamName) {
 	      teamName = interTeamName;
 	}
@@ -63,3 +70,4 @@ public class Team{
 	      groupPlace--;
 	}
 }
+
