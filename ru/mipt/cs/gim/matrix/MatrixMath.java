@@ -1,6 +1,6 @@
 package ru.mipt.cs.gim.matrix;
 
-import ru.mipt.cs.gim.matrix.exeptions.*;
+import ru.mipt.cs.gim.matrix.exceptions.*;
 
 public class MatrixMath {
 
