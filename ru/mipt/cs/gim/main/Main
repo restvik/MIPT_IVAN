@@ -1,0 +1,46 @@
+package ru.mipt.cs.gim.main;
+
+import ru.mipt.cs.gim.matrix.*;
+import ru.mipt.cs.gim.matrix.exeprions.*;
+
+
+public class Main {
+
+	public static void main(String args[]) {
+		Matrix m1, m2, rm , tm , dm;
+		Vector v1 , v2;
+		dm = new Matrix (3 , 2);
+		m1 = new Matrix (2 , 7);
+		m2 = new Matrix (2 , 7);
+		tm = new Matrix (7, 2);
+		v1 = new Vector (2);
+		v2 = new Vector (2);
+		try{
+			rm = MatrixMath.multiple(m1, v1);
+			MatrixMath.printMatrix(m1);
+			System.out.println();
+			MatrixMath.printMatrix(m2);
+			System.out.println();
+			MatrixMath.printMatrix(rm);
+			tm = MatrixMath.transposition(m1);
+			System.out.println();
+			MatrixMath.printMatrix(tm);
+			rm =  MatrixMath.multipleVector(v1, v2);
+			System.out.println();
+			MatrixMath.printMatrix(rm);
+			MatrixMath.printMatrix(MatrixMath.transposition(v1));
+			System.out.println();
+			MatrixMath.printMatrix(v1);
+			System.out.println();
+			MatrixMath.printMatrix(v2);
+			System.out.println("!!!!!!!!!!!!!!");
+			
+		}catch (WrongSize e) { System.out.println(e.getMessage()); }
+		try{
+			double det = MatrixMath.determinant(dm);
+			MatrixMath.printMatrix(dm);
+			System.out.println(det);
+		}catch (NotSquare e) { System.out.println(e.getMessage()); }
+	}
+
+}
